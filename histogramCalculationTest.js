@@ -130,7 +130,7 @@ test("Extracts colours from canvas", function () {
 });
 test("Calculates histogram properly.", function() {
 	var matrix = imageProcessing().extractColorMatrix(canvas);
-	var colorResolution = 3, greenIndex = 1, redIndex = 0, blueIndex = 2;
+	var colorCount = 8, greenIndex = 1, redIndex = 0, blueIndex = 2;
 	var histogram = imageProcessing().calculateHistogram(matrix, colorResolution);
 	equal(histogram.length, 1, "There's appropriate number of colors in the calculated histogram.");
 	equal(histogram[0], greenPixelCount, "The histogram calculated correctly the number of green pixels.");
