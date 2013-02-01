@@ -1,5 +1,4 @@
-﻿
-var imageProcessing = function () {
+﻿function imageProcessing() {
     "use strict";
     var totalNumberOfColors = 16777215,
         /**
@@ -44,7 +43,6 @@ var imageProcessing = function () {
             calculateColorNumber: function (red, green, blue) {
                 return (red * 256 * 256 + green * 256 + blue);
             },
-            
             /**
             *  converts HSL to RGB
             *  @param hslObject object with three properties: 
@@ -71,7 +69,7 @@ var imageProcessing = function () {
                     if (vH > 1) { vH -= 1; }
                     if ((6 * vH) < 1) { return v1 + (v2 - v1) * 6 * vH; }
                     if ((2 * vH) < 1) { return v2; }
-                    if ((3 * vH) < 2) { 
+                    if ((3 * vH) < 2) {
                         return v1 + (v2 - v1) * ((2 / 3) - vH) * 6;
                     }
                     return v1;
@@ -90,7 +88,8 @@ var imageProcessing = function () {
                     temp_1 = 2 * L - temp_2;
 
                     red = Math.round(
-                    255 * hue_2_RGB(temp_1, temp_2, H + (1 / 3)));
+                        255 * hue_2_RGB(temp_1, temp_2, H + (1 / 3))
+                    );
                     green = Math.round(255 * hue_2_RGB(temp_1, temp_2, H));
                     blue = Math.round(255 * hue_2_RGB(temp_1, temp_2, H - (1 / 3)));
                 }
@@ -166,7 +165,6 @@ var imageProcessing = function () {
                 }
                 return requantifiedColor;
             },
-            
             requantifyImage: function (bits, canvas) {
                 var matrix = this.extractColorMatrix(canvas),
                     i,
@@ -174,11 +172,11 @@ var imageProcessing = function () {
                     originalColor,
                     requantifiedMatrix = [];
                 for (i = 0; i < matrixLength; i += 3) {
-                    originalColor = [matrix[i], matrix[i+1], matrix[i+2]];
-                    requantifiedMatrix.push(requantify(bits, originalColor));
+                    originalColor = [matrix[i], matrix[i + 1], matrix[i + 2]];
+                    requantifiedMatrix.push(this.requantify(bits, originalColor));
                 }
                 return requantifiedMatrix;
-            }
+            },
             /**
             * Counts the number of occurances for every color in a canvas image.
             * @param canvas - the canvas from where the image is extracted.
@@ -189,12 +187,12 @@ var imageProcessing = function () {
             */
             calculateHistogram: function (canvas, colorCount) {
                 var i = 0,
-				    k = 0,
                     colorResolution = Math.round(
-                        Math.log(colorCount) / Math.log(2));
+                        Math.log(colorCount) / Math.log(2)
+                    ),
                     sectionBorders = this.colorSectionLength(colorResolution),
                     calculatedColor = 0,
-                    requantified = requantifyImage(colorResolution, canvas),
+                    requantified = this.requantifyImage(colorResolution, canvas),
                     reqLength = requantified.length,
                     histogram = Map();
                 for (i = 0; i < reqLength; i += 1) {
@@ -208,4 +206,4 @@ var imageProcessing = function () {
             }
         };
     return publ;
-};
+}
