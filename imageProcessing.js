@@ -1,4 +1,5 @@
-﻿var imageProcessing = function () {
+﻿
+var imageProcessing = function () {
     "use strict";
     var totalNumberOfColors = 16777215,
         /**
@@ -145,7 +146,7 @@
             * central values of a color cluster.
             * @param bits - pow(2, bits) gives the number of 
             * possible values of the new color.
-            * @param original - the original color.
+            * @param original - the original color; a 3 item array.
             * @returns color code near to original
             * but equal for a certain amount of colors.
             */
@@ -155,7 +156,7 @@
                     requantifiedColor = [],
                     i = 0,
                     requantifiedIngredient = 0,
-                    ingredientSection = 0,
+                    ingrSection = 0,
                     sectionPosition = Math.round(sectionLength / 2);
                 for (i = 0; i < 3; i += 1) {
                     previousColorSection = Math.floor(original[i] / sectionLength);
@@ -165,11 +166,26 @@
                 }
                 return requantifiedColor;
             },
+            
+            requantifyImage: function (bits, canvas) {
+                var matrix = this.extractColorMatrix(canvas),
+                    i,
+                    matrixLength = matrix.length,
+                    originalColor,
+                    requantifiedMatrix = [];
+                for (i = 0; i < matrixLength; i += 3) {
+                    originalColor = [matrix[i], matrix[i+1], matrix[i+2]];
+                    requantifiedMatrix.push(requantify(bits, originalColor));
+                }
+                return requantifiedMatrix;
+            }
             /**
             * Counts the number of occurances for every color in a canvas image.
             * @param canvas - the canvas from where the image is extracted.
             * @param colorCount - the number of colors in the palette for which 
             * the histogram will be calculated.
+            * @return a jsStructures.Map object containing all colors as keys 
+            * and their occurances as values.
             */
             calculateHistogram: function (canvas, colorCount) {
                 var i = 0,
@@ -178,13 +194,14 @@
                         Math.log(colorCount) / Math.log(2));
                     sectionBorders = this.colorSectionLength(colorResolution),
                     calculatedColor = 0,
-                    histogram = instantiateArray(sectionBorders.length + 1);
-                for (i = 0; i < matrix.length; i += 3) {
-                    for (k = 0; k < sectionBorders.length; k += 1) {
-                        if (sectionBorders[k] > calculatedColor) {
-                            histogram[k] += 1;
-                            break;
-                        }
+                    requantified = requantifyImage(colorResolution, canvas),
+                    reqLength = requantified.length,
+                    histogram = Map();
+                for (i = 0; i < reqLength; i += 1) {
+                    if (histogram.has(requantified[i])) {
+                        histogram.getEntry(requantified[i]).value += 1;
+                    } else {
+                        histogram.put(requantified[i], 1);
                     }
                 }
                 return histogram;
