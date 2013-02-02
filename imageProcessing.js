@@ -194,10 +194,12 @@
                     calculatedColor = 0,
                     requantified = this.requantifyImage(colorResolution, canvas),
                     reqLength = requantified.length,
-                    histogram = Map();
+                    histogram = new Hashtable(),
+                    colorHits = 0;
                 for (i = 0; i < reqLength; i += 1) {
-                    if (histogram.has(requantified[i])) {
-                        histogram.getEntry(requantified[i]).value += 1;
+                    if (histogram.containsKey(requantified[i])) {
+                        colorHits = histogram.get(requantified[i]) + 1;
+                        histogram.put(requantified[i], colorHits);
                     } else {
                         histogram.put(requantified[i], 1);
                     }
