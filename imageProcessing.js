@@ -1,10 +1,9 @@
 ﻿function imageProcessing() {
     "use strict";
-    var totalNumberOfColors = 16777215,
         /**
         *     
         */
-        instantiateArray = function (elementsCount) {
+    var instantiateArray = function (elementsCount) {
             var i = 0, resultArray = [];
             for (i = 0; i < elementsCount; i += 1) {
                 resultArray[i] = 0;
@@ -36,6 +35,39 @@
             return b;
         },
         publ = {
+            RgbColor: function (r, g, b) {
+                this.red = r;
+                this.green = g;
+                this.blue = b;
+                this.equals = function (other) {
+                    try {
+                    return typeof other !== 'undefined' &&
+                                other !== null &&
+                                Object.keys(this).length ===
+                                    Object.keys(other).length &&
+                                this.red === other.red &&
+                                this.green === other.green &&
+                                this.blue === other.blue;
+                    } catch (err) {
+                        return false;
+                    }
+                    if (other === 'undefined' ||
+                            other.prototype.constructor === this.prototype.constructor) {
+                        return false;
+                    }
+                    if (this.red !== other.red && this.green !== other.green &&
+                            this.blue !== other.blue) {
+                        return false;
+                    }
+                    return true;
+                };
+                this.hashCode = function () {
+                    return this.red * 37 + this.green * 13 + this.blue;
+                };
+                this.toArray = function () {
+                    return [this.red, this.green, this.blue];
+                };
+            },
             /**
             *  returns the decimal equivalent of the hexadecimal number of the 
             *  color.
@@ -118,10 +150,10 @@
                 colorMatrix = [];
                 pixels = imagedata.data;
                 for (i = 0; i < pixels.length; i += 4) {
-                    colorMatrix[cmIndex] = pixels[i];
-                    colorMatrix[cmIndex + 1] = pixels[i + 1];
-                    colorMatrix[cmIndex + 2] = pixels[i + 2];
-                    cmIndex += 3;
+                    colorMatrix[cmIndex] = new this.RgbColor(pixels[i],
+                        pixels[i + 1], pixels[i + 2]
+                        );
+                    cmIndex += 1;
                 }
                 return colorMatrix;
             },

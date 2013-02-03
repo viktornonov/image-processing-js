@@ -23,7 +23,19 @@ test("Transform HSL to RGB format", function() {
 //test("Transform RGB to HSL fromat", function() {
 //	var 
 //});
-
+module("testing RgbColor methods");
+test("Test equality of two objects", function () {
+    
+    var imgProc = imageProcessing(),
+        first = new imgProc.RgbColor(1,2,3),
+        second = new imgProc.RgbColor(1,2,3),
+        third = new imgProc.RgbColor(4,2,3),
+        fourth;
+    ok(first.equals(second), "Equal objects are well decided.");
+    ok(!first.equals(third), "Unequal objects are well decided.");
+    ok(!first.equals(fourth), "Undefined is filtered out.");
+    ok(!first.equals(window), "Different types of objects are not equal.");
+});
 module("Requantifying the image", {
 	setup: function() {
 		
@@ -68,8 +80,7 @@ test("Requantifies the colors", function() {
 	requantifiedGreen = imageProcessing().requantify(6, strangeGreen),
 	requantifiedBlue = imageProcessing().requantify(6, strangeBlue),
 	requantifiedRed = imageProcessing().requantify(6, strangeRed);
-	
-	
+		
 	equal(requantifiedGreen[0], 32, "First Color: Red is requantified well with 6 bits");
 	equal(requantifiedGreen[1], 96, "First Color: Green is requantified well with 6 bits");
 	equal(requantifiedGreen[2], 96, "First Color: Blue is requantified well with 6 bits");
@@ -94,7 +105,7 @@ module("Calculating histogram.", {
 	$(canvas).attr('id', 'canvas');
 	ok(canvas, "canvas is present");
 	ok(!!canvas.getContext, "canvas supports 2d context");
-	if ($("#canvas").length == 0) {
+	if ($("#canvas").length === 0) {
 		$("body").append(canvas);
 	}
 	canvas.height=dh;
@@ -129,9 +140,10 @@ test("Extracts colours from canvas", function () {
 	equal(matrix[matrix.length-1], 0, 'Actual value equals expected');
 });
 test("Calculates histogram properly.", function() {
-	var matrix = imageProcessing().extractColorMatrix(canvas);
-	var colorCount = 8, greenIndex = 1, redIndex = 0, blueIndex = 2;
-	var histogram = imageProcessing().calculateHistogram(matrix, colorCount);
-	equal(histogram.length, 1, "There's appropriate number of colors in the calculated histogram.");
-	equal(histogram[0], greenPixelCount, "The histogram calculated correctly the number of green pixels.");
+	var histogram = imageProcessing().calculateHistogram(canvas, 8),
+        keys = histogram.keys(),
+        values = histogram.values();
+	equal(keys.length, 1, "There's appropriate number of colors in the calculated histogram.");
+	equal(keys[0], [0, 255, 0], "There's appropriate number of colors in the calculated histogram.");
+    equal(histogram.values()[0], greenPixelCount, "Appropriate number of green pixels was calculated.");
 });
