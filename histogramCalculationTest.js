@@ -126,24 +126,26 @@ module("Calculating histogram.", {
 test("Extracts colours from canvas", function () {
 	var matrix = imageProcessing().extractColorMatrix(canvas);
 	notEqual(matrix.length, 0, "A matrix is returned");
-	equal((matrix.length % 3), 0, "The matrix is well formed");
-	equal(matrix[0], 0, 'Actual value equals expected');
-	equal(matrix[1], 255, 'Actual value equals expected');
-	equal(matrix[2], 0, 'Actual value equals expected');
+    var firstElem = matrix[0],
+        secondElem = matrix[1],
+        lastElem = matrix[matrix.length-1];
+	equal(firstElem.red, 0, 'Actual value equals expected');
+	equal(firstElem.green, 255, 'Actual value equals expected');
+	equal(firstElem.blue, 0, 'Actual value equals expected');
 	
-	equal(matrix[3], 0, 'Actual value equals expected');
-	equal(matrix[4], 255, 'Actual value equals expected');
-	equal(matrix[5], 0, 'Actual value equals expected');
+	equal(secondElem.red, 0, 'Actual value equals expected');
+	equal(secondElem.green, 255, 'Actual value equals expected');
+	equal(secondElem.blue, 0, 'Actual value equals expected');
 	
-	equal(matrix[matrix.length-3], 0, 'Actual value equals expected');
-	equal(matrix[matrix.length-2], 255, 'Actual value equals expected');
-	equal(matrix[matrix.length-1], 0, 'Actual value equals expected');
+	equal(lastElem.red, 0, 'Actual value equals expected');
+	equal(lastElem.green, 255, 'Actual value equals expected');
+	equal(lastElem.blue, 0, 'Actual value equals expected');
 });
 test("Calculates histogram properly.", function() {
 	var histogram = imageProcessing().calculateHistogram(canvas, 8),
         keys = histogram.keys(),
         values = histogram.values();
 	equal(keys.length, 1, "There's appropriate number of colors in the calculated histogram.");
-	equal(keys[0], [0, 255, 0], "There's appropriate number of colors in the calculated histogram.");
+	equal(keys[0], [64, 192, 64], "There's appropriate number of colors in the calculated histogram.");
     equal(histogram.values()[0], greenPixelCount, "Appropriate number of green pixels was calculated.");
 });
