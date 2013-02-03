@@ -51,15 +51,6 @@
                     } catch (err) {
                         return false;
                     }
-                    if (other === 'undefined' ||
-                            other.prototype.constructor === this.prototype.constructor) {
-                        return false;
-                    }
-                    if (this.red !== other.red && this.green !== other.green &&
-                            this.blue !== other.blue) {
-                        return false;
-                    }
-                    return true;
                 };
                 this.hashCode = function () {
                     return this.red * 37 + this.green * 13 + this.blue;
