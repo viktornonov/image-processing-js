@@ -1,21 +1,22 @@
-﻿module("testing HSL to RGB and RGB to HSL");
+﻿var imageProcessing = imageProcessing();
+module("testing HSL to RGB and RGB to HSL");
 test("Transform HSL to RGB format", function() {
 	var redBlueBorderH = 300;
 	var redBlueBorderS = 100;
 	var redBlueBorderL = 50;
-	var magendaResult = imageProcessing().hsl2rgb({ H: redBlueBorderH, S: redBlueBorderS, L: redBlueBorderL});
+	var magendaResult = imageProcessing.hsl2rgb({ H: redBlueBorderH, S: redBlueBorderS, L: redBlueBorderL});
 	QUnit.close(magendaResult.R, 255, 1, " Magenta: Red color converted fine.");
 	QUnit.close(magendaResult.G, 0, 1, "Magenta: Green color converted fine.");
 	QUnit.close(magendaResult.B, 255, 1, "Magenta: Blue color converted fine.");
-	var whiteResult = imageProcessing().hsl2rgb({ H: redBlueBorderH, S: redBlueBorderS, L: 100});
+	var whiteResult = imageProcessing.hsl2rgb({ H: redBlueBorderH, S: redBlueBorderS, L: 100});
 	QUnit.close(whiteResult.R, 255, 1, "White: Red color converted fine.");
 	QUnit.close(whiteResult.G, 255, 1, "White: Green color converted fine.");
 	QUnit.close(whiteResult.B, 255, 1, "White: Blue color converted fine.");
-	var randomColorResult = imageProcessing().hsl2rgb({H: 303, S: 80, L: 35});
+	var randomColorResult = imageProcessing.hsl2rgb({H: 303, S: 80, L: 35});
 	QUnit.close(randomColorResult.R, 160, 1, "Random Color: Red color converted fine.");
 	QUnit.close(randomColorResult.G, 18, 1, "Random Color: Green color converted fine.");
 	QUnit.close(randomColorResult.B, 153, 1, "Random Color: Blue color converted fine.");
-	var randomColorResult2 = imageProcessing().hsl2rgb({H: 112, S: 80, L: 37});
+	var randomColorResult2 = imageProcessing.hsl2rgb({H: 112, S: 80, L: 37});
 	QUnit.close(randomColorResult2.R, 39, 1, "Random Color 2: Red color converted fine.");
 	QUnit.close(randomColorResult2.G, 170, 1, "Random Color 2: Green color converted fine.");
 	QUnit.close(randomColorResult2.B, 19, 1, "Random Color 2: Blue color converted fine.");
@@ -26,7 +27,7 @@ test("Transform HSL to RGB format", function() {
 module("testing RgbColor methods");
 test("Test equality of two objects", function () {
     
-    var imgProc = imageProcessing(),
+    var imgProc = imageProcessing,
         first = new imgProc.RgbColor(1,2,3),
         second = new imgProc.RgbColor(1,2,3),
         third = new imgProc.RgbColor(4,2,3),
@@ -44,28 +45,28 @@ module("Requantifying the image", {
 	}
 });
 test("Calculate color section's length", function() {
-	var colorSectionLength = imageProcessing().colorSectionLength(3);
+	var colorSectionLength = imageProcessing.colorSectionLength(3);
 	QUnit.close(colorSectionLength, 128, 1, "Color Section is well calculated.");
-	colorSectionLength = imageProcessing().colorSectionLength(6);
+	colorSectionLength = imageProcessing.colorSectionLength(6);
 	QUnit.close(colorSectionLength, 64, 1, "Color Section is well calculated.");
-	colorSectionLength = imageProcessing().colorSectionLength(9);
+	colorSectionLength = imageProcessing.colorSectionLength(9);
 	QUnit.close(colorSectionLength, 32, 1, "Color Section is well calculated.");
-	colorSectionLength = imageProcessing().colorSectionLength(12);
+	colorSectionLength = imageProcessing.colorSectionLength(12);
 	QUnit.close(colorSectionLength, 16, 1, "Color Section is well calculated.");
 });
 test("Injects colors", function() {
 	var green = [0, 255, 0], blue = [0, 0, 255];
-	var greenCalculated = imageProcessing().calculateColorNumber(green[0], green[1], green[2]);
-	var blueCalculated = imageProcessing().calculateColorNumber(blue[0], blue[1], blue[2]);
+	var greenCalculated = imageProcessing.calculateColorNumber(green[0], green[1], green[2]);
+	var blueCalculated = imageProcessing.calculateColorNumber(blue[0], blue[1], blue[2]);
 	equal(greenCalculated, 255*256, "Color green is Calculated correctly.");
 	equal(blueCalculated, 255, "Color blue is Calculated correctly.");
 });
 
 test("Requantifies the colors", function() {
 	var strangeGreen = [0, 107, 87], strangeBlue = [0, 33, 128], strangeRed = [211, 127, 0];
-	var requantifiedGreen = imageProcessing().requantify(3, strangeGreen),
-	requantifiedBlue = imageProcessing().requantify(3, strangeBlue),
-	requantifiedRed = imageProcessing().requantify(3, strangeRed);
+	var requantifiedGreen = imageProcessing.requantify(3, strangeGreen),
+	requantifiedBlue = imageProcessing.requantify(3, strangeBlue),
+	requantifiedRed = imageProcessing.requantify(3, strangeRed);
 	
 	equal(requantifiedGreen[0], 64, "First Color: Red is requantified well with 3 bits");
 	equal(requantifiedGreen[1], 64, "First Color: Green is requantified well with 3 bits");
@@ -77,9 +78,9 @@ test("Requantifies the colors", function() {
 	equal(requantifiedRed[1], 64, "Third Color: Green is requantified well with 3 bits");
 	equal(requantifiedRed[2], 64, "Third Color: Blue is requantified well with 3 bits");
 	
-	requantifiedGreen = imageProcessing().requantify(6, strangeGreen),
-	requantifiedBlue = imageProcessing().requantify(6, strangeBlue),
-	requantifiedRed = imageProcessing().requantify(6, strangeRed);
+	requantifiedGreen = imageProcessing.requantify(6, strangeGreen),
+	requantifiedBlue = imageProcessing.requantify(6, strangeBlue),
+	requantifiedRed = imageProcessing.requantify(6, strangeRed);
 		
 	equal(requantifiedGreen[0], 32, "First Color: Red is requantified well with 6 bits");
 	equal(requantifiedGreen[1], 96, "First Color: Green is requantified well with 6 bits");
@@ -124,7 +125,7 @@ module("Calculating histogram.", {
   }
 });
 test("Extracts colours from canvas", function () {
-	var matrix = imageProcessing().extractColorMatrix(canvas);
+	var matrix = imageProcessing.extractColorMatrix(canvas);
 	notEqual(matrix.length, 0, "A matrix is returned");
     var firstElem = matrix[0],
         secondElem = matrix[1],
@@ -142,7 +143,7 @@ test("Extracts colours from canvas", function () {
 	equal(lastElem.blue, 0, 'Actual value equals expected');
 });
 test("Calculates histogram properly.", function() {
-	var histogram = imageProcessing().calculateHistogram(canvas, 8),
+	var histogram = imageProcessing.calculateHistogram(canvas, 8),
         keys = histogram.keys(),
         values = histogram.values();
 	equal(keys.length, 1, "There's appropriate number of colors in the calculated histogram.");
