@@ -39,9 +39,9 @@
                 this.red = r;
                 this.green = g;
                 this.blue = b;
-                this.equals = function (other) {
+                this.prototype.equals = function (other) {
                     try {
-                    return typeof other !== 'undefined' &&
+                        return other !== 'undefined' &&
                                 other !== null &&
                                 Object.keys(this).length ===
                                     Object.keys(other).length &&
@@ -164,6 +164,7 @@
                 return Math.round(sectionLength);
             },
             /**
+            * 
             * Maps the color ingredients values of the real 24-bit color to 
             * central values of a color cluster.
             * @param bits - pow(2, bits) gives the number of 
@@ -171,6 +172,8 @@
             * @param original - the original color; a 3 item array.
             * @returns color code near to original
             * but equal for a certain amount of colors.
+            *
+            * TODO: refactor using RgbColor objects.
             */
             requantify: function (bits, original) {
                 var sectionLength = this.colorSectionLength(bits),
@@ -188,6 +191,9 @@
                 }
                 return requantifiedColor;
             },
+            /**
+            * 
+            */
             requantifyImage: function (bits, canvas) {
                 var matrix = this.extractColorMatrix(canvas),
                     i,
