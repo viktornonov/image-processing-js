@@ -1,9 +1,34 @@
 ﻿function imageProcessing() {
     "use strict";
+
+	var RgbColor = function (r, g, b) {
+            this.red = r;
+            this.green = g;
+			this.blue = b;
+			this.prototype.equals = function (other) {
+				try {
+					return other !== 'undefined' &&
+							other !== null &&
+							Object.keys(this).length ===
+								Object.keys(other).length &&
+							this.red === other.red &&
+							this.green === other.green &&
+							this.blue === other.blue;
+				} catch (err) {
+					return false;
+				}
+			};
+			this.hashCode = function () {
+				return this.red * 37 + this.green * 13 + this.blue;
+			};
+			this.toArray = function () {
+				return [this.red, this.green, this.blue];
+			};
+        },
         /**
         *     
         */
-    var instantiateArray = function (elementsCount) {
+        instantiateArray = function (elementsCount) {
             var i = 0, resultArray = [];
             for (i = 0; i < elementsCount; i += 1) {
                 resultArray[i] = 0;
@@ -35,30 +60,7 @@
             return b;
         },
         publ = {
-            RgbColor: function (r, g, b) {
-                this.red = r;
-                this.green = g;
-                this.blue = b;
-                this.prototype.equals = function (other) {
-                    try {
-                        return other !== 'undefined' &&
-                                other !== null &&
-                                Object.keys(this).length ===
-                                    Object.keys(other).length &&
-                                this.red === other.red &&
-                                this.green === other.green &&
-                                this.blue === other.blue;
-                    } catch (err) {
-                        return false;
-                    }
-                };
-                this.hashCode = function () {
-                    return this.red * 37 + this.green * 13 + this.blue;
-                };
-                this.toArray = function () {
-                    return [this.red, this.green, this.blue];
-                };
-            },
+			RgbColor: RgbColor,
             /**
             *  returns the decimal equivalent of the hexadecimal number of the 
             *  color.
@@ -178,7 +180,7 @@
             requantify: function (bits, original) {
                 var sectionLength = this.colorSectionLength(bits),
                     previousColorSection = 0,
-                    requantifiedColor = [],
+                    requantifiedColor = new RgbColor(),
                     i = 0,
                     requantifiedIngredient = 0,
                     ingrSection = 0,
