@@ -1,4 +1,4 @@
-exprimental
+Image processing with javascript
 ===========
 
-some experiments
+histogram
